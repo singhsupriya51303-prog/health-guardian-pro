@@ -12,6 +12,7 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import CameraMonitor from "./pages/CameraMonitor";
 import AIChat from "./pages/AIChat";
+import AIAgents from "./pages/AIAgents";
 import Emergency from "./pages/Emergency";
 import Lifestyle from "./pages/Lifestyle";
 import Fitness from "./pages/Fitness";
