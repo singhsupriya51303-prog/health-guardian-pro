@@ -12,6 +12,7 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import CameraMonitor from "./pages/CameraMonitor";
 import AIChat from "./pages/AIChat";
+import AIAgents from "./pages/AIAgents";
 import Emergency from "./pages/Emergency";
 import Lifestyle from "./pages/Lifestyle";
 import Fitness from "./pages/Fitness";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/camera" element={<ProtectedRoute><CameraMonitor /></ProtectedRoute>} />
             <Route path="/chat" element={<ProtectedRoute><AIChat /></ProtectedRoute>} />
+            <Route path="/agents" element={<ProtectedRoute><AIAgents /></ProtectedRoute>} />
             <Route path="/emergency" element={<ProtectedRoute><Emergency /></ProtectedRoute>} />
             <Route path="/lifestyle" element={<ProtectedRoute><Lifestyle /></ProtectedRoute>} />
             <Route path="/fitness" element={<ProtectedRoute><Fitness /></ProtectedRoute>} />
