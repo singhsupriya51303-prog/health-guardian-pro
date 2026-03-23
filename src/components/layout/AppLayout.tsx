@@ -9,6 +9,7 @@ const navItems = [
   { to: "/emergency", icon: AlertTriangle, label: "Emergency" },
   { to: "/lifestyle", icon: Salad, label: "Lifestyle Coach" },
   { to: "/fitness", icon: Dumbbell, label: "Fitness" },
+  { to: "/agents", icon: Brain, label: "AI Agents" },
 ];
 
 interface Props {
