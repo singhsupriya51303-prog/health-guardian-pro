@@ -64,7 +64,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Button variant="hero" size="lg" className="text-base px-8 py-6" onClick={() => navigate("/onboarding")}>
+          <Button variant="hero" size="lg" className="text-base px-8 py-6" onClick={() => navigate("/auth")}>
             Get Started Free
           </Button>
           <Button variant="heroOutline" size="lg" className="text-base px-8 py-6">

@@ -14,7 +14,174 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      emergency_contacts: {
+        Row: {
+          created_at: string
+          id: string
+          is_primary: boolean | null
+          name: string
+          phone: string
+          relationship: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_primary?: boolean | null
+          name: string
+          phone: string
+          relationship?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_primary?: boolean | null
+          name?: string
+          phone?: string
+          relationship?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      health_records: {
+        Row: {
+          diabetes_risk: number | null
+          heart_disease_risk: number | null
+          heart_rate: number | null
+          id: string
+          notes: string | null
+          recorded_at: string
+          regeneration_score: number | null
+          sleep_hours: number | null
+          stress_level: number | null
+          user_id: string
+        }
+        Insert: {
+          diabetes_risk?: number | null
+          heart_disease_risk?: number | null
+          heart_rate?: number | null
+          id?: string
+          notes?: string | null
+          recorded_at?: string
+          regeneration_score?: number | null
+          sleep_hours?: number | null
+          stress_level?: number | null
+          user_id: string
+        }
+        Update: {
+          diabetes_risk?: number | null
+          heart_disease_risk?: number | null
+          heart_rate?: number | null
+          id?: string
+          notes?: string | null
+          recorded_at?: string
+          regeneration_score?: number | null
+          sleep_hours?: number | null
+          stress_level?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          age: number | null
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          gender: string | null
+          height: number | null
+          id: string
+          updated_at: string
+          weight: number | null
+        }
+        Insert: {
+          age?: number | null
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          gender?: string | null
+          height?: number | null
+          id: string
+          updated_at?: string
+          weight?: number | null
+        }
+        Update: {
+          age?: number | null
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          gender?: string | null
+          height?: number | null
+          id?: string
+          updated_at?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      workout_logs: {
+        Row: {
+          calories_burned: number | null
+          duration_minutes: number | null
+          exercise_name: string
+          id: string
+          logged_at: string
+          reps: number | null
+          sets: number | null
+          user_id: string
+          weight_kg: number | null
+        }
+        Insert: {
+          calories_burned?: number | null
+          duration_minutes?: number | null
+          exercise_name: string
+          id?: string
+          logged_at?: string
+          reps?: number | null
+          sets?: number | null
+          user_id: string
+          weight_kg?: number | null
+        }
+        Update: {
+          calories_burned?: number | null
+          duration_minutes?: number | null
+          exercise_name?: string
+          id?: string
+          logged_at?: string
+          reps?: number | null
+          sets?: number | null
+          user_id?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
