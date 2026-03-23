@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Shield, LayoutDashboard, Camera, MessageCircle, AlertTriangle, Salad, Dumbbell, ChevronLeft, LogOut } from "lucide-react";
+import { Shield, LayoutDashboard, Camera, MessageCircle, AlertTriangle, Salad, Dumbbell, Brain, ChevronLeft, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
