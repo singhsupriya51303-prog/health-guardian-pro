@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { Shield, LayoutDashboard, Camera, MessageCircle, AlertTriangle, Salad, Dumbbell, ChevronLeft } from "lucide-react";
+import { Shield, LayoutDashboard, Camera, MessageCircle, AlertTriangle, Salad, Dumbbell, ChevronLeft, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -16,6 +17,12 @@ interface Props {
 
 const AppLayout = ({ children }: Props) => {
   const navigate = useNavigate();
+  const { signOut, user } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -46,6 +53,22 @@ const AppLayout = ({ children }: Props) => {
             </NavLink>
           ))}
         </nav>
+
+        {/* User + Sign Out */}
+        <div className="px-3 py-4 border-t border-border space-y-2">
+          {user && (
+            <div className="px-3 py-1 text-xs text-muted-foreground truncate">
+              {user.email}
+            </div>
+          )}
+          <button
+            onClick={handleSignOut}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors w-full"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
+        </div>
       </aside>
 
       {/* Mobile header */}
@@ -56,9 +79,14 @@ const AppLayout = ({ children }: Props) => {
               <Shield className="w-5 h-5 text-primary" />
               LifeGuard AI
             </div>
-            <button onClick={() => navigate("/")} className="text-muted-foreground">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={handleSignOut} className="text-muted-foreground hover:text-destructive">
+                <LogOut className="w-4 h-4" />
+              </button>
+              <button onClick={() => navigate("/")} className="text-muted-foreground">
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            </div>
           </div>
           <div className="flex gap-1 px-3 pb-2 overflow-x-auto">
             {navItems.map(item => (
