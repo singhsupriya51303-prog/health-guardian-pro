@@ -6,10 +6,10 @@
 
 <p align="center">
   <a href="https://www.linkedin.com/in/supriya-singh-011893308/">
-    <img src="https://img.shields.io/badge/-Follow%20Shubham%20Saboo-blue?logo=linkedin&style=flat-square" alt="LinkedIn">
+    <img src="https://img.shields.io/badge/-Follow%20Supriya-blue?logo=linkedin&style=flat-square" alt="LinkedIn">
   </a>
   <a href="https://github.com/singhsupriya51303-prog">
-    <img src="https://img.shields.io/twitter/follow/Shubham_Saboo" alt="GitHub">
+    <img src="[![GitHub followers](https://img.shields.io/github/followers/supriya?label=Follow&style=social)](https://github.com/supriya)" alt="GitHub">
   </a>
 </p>
 
