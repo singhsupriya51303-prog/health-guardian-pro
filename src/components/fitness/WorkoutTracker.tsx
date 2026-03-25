@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Check, RotateCcw, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Plus, Trash2, Check, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface SetLog {
@@ -11,43 +10,53 @@ interface SetLog {
   done: boolean;
 }
 
-interface WorkoutExercise {
+export interface WorkoutExercise {
   id: number;
   name: string;
   sets: SetLog[];
   collapsed: boolean;
 }
 
-const WorkoutTracker = () => {
-  const [exercises, setExercises] = useState<WorkoutExercise[]>([
-    {
-      id: 1, name: "Barbell Bench Press", collapsed: false,
-      sets: [
-        { id: 1, weight: "60", reps: "12", done: true },
-        { id: 2, weight: "80", reps: "10", done: true },
-        { id: 3, weight: "90", reps: "8", done: false },
-        { id: 4, weight: "90", reps: "8", done: false },
-      ],
-    },
-    {
-      id: 2, name: "Incline Dumbbell Press", collapsed: false,
-      sets: [
-        { id: 1, weight: "30", reps: "12", done: false },
-        { id: 2, weight: "30", reps: "10", done: false },
-        { id: 3, weight: "30", reps: "10", done: false },
-      ],
-    },
-    {
-      id: 3, name: "Cable Flyes", collapsed: true,
-      sets: [
-        { id: 1, weight: "15", reps: "15", done: false },
-        { id: 2, weight: "15", reps: "15", done: false },
-        { id: 3, weight: "15", reps: "12", done: false },
-      ],
-    },
-  ]);
+interface Props {
+  initialExercises?: WorkoutExercise[];
+}
 
-  const [workoutActive, setWorkoutActive] = useState(true);
+const defaultExercises: WorkoutExercise[] = [
+  {
+    id: 1, name: "Barbell Bench Press", collapsed: false,
+    sets: [
+      { id: 1, weight: "60", reps: "12", done: true },
+      { id: 2, weight: "80", reps: "10", done: true },
+      { id: 3, weight: "90", reps: "8", done: false },
+      { id: 4, weight: "90", reps: "8", done: false },
+    ],
+  },
+  {
+    id: 2, name: "Incline Dumbbell Press", collapsed: false,
+    sets: [
+      { id: 1, weight: "30", reps: "12", done: false },
+      { id: 2, weight: "30", reps: "10", done: false },
+      { id: 3, weight: "30", reps: "10", done: false },
+    ],
+  },
+  {
+    id: 3, name: "Cable Flyes", collapsed: true,
+    sets: [
+      { id: 1, weight: "15", reps: "15", done: false },
+      { id: 2, weight: "15", reps: "15", done: false },
+      { id: 3, weight: "15", reps: "12", done: false },
+    ],
+  },
+];
+
+const WorkoutTracker = ({ initialExercises }: Props) => {
+  const [exercises, setExercises] = useState<WorkoutExercise[]>(defaultExercises);
+
+  useEffect(() => {
+    if (initialExercises && initialExercises.length > 0) {
+      setExercises(initialExercises);
+    }
+  }, [initialExercises]);
 
   const toggleSet = (exIdx: number, setIdx: number) => {
     setExercises(prev => prev.map((ex, ei) =>
@@ -93,7 +102,6 @@ const WorkoutTracker = () => {
 
   return (
     <div className="space-y-4">
-      {/* Workout summary bar */}
       <div className="grid grid-cols-3 gap-3">
         {[
           { label: "Sets Done", value: `${doneSets}/${totalSets}` },
@@ -107,7 +115,6 @@ const WorkoutTracker = () => {
         ))}
       </div>
 
-      {/* Exercise cards */}
       <div className="space-y-3">
         <AnimatePresence>
           {exercises.map((ex, exIdx) => (
@@ -119,7 +126,6 @@ const WorkoutTracker = () => {
               exit={{ opacity: 0, x: -100 }}
               className="bg-secondary rounded-xl overflow-hidden"
             >
-              {/* Exercise header */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                 <button onClick={() => toggleCollapse(exIdx)} className="flex items-center gap-2 flex-1">
                   <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${ex.collapsed ? "-rotate-90" : ""}`} />
@@ -141,7 +147,6 @@ const WorkoutTracker = () => {
                     exit={{ height: 0 }}
                     className="overflow-hidden"
                   >
-                    {/* Header row */}
                     <div className="grid grid-cols-[40px_1fr_1fr_40px] gap-2 px-4 pt-3 pb-1">
                       <span className="text-[10px] text-muted-foreground uppercase text-center">Set</span>
                       <span className="text-[10px] text-muted-foreground uppercase text-center">Kg</span>
@@ -149,7 +154,6 @@ const WorkoutTracker = () => {
                       <span className="text-[10px] text-muted-foreground uppercase text-center">✓</span>
                     </div>
 
-                    {/* Set rows */}
                     {ex.sets.map((set, setIdx) => (
                       <div key={set.id} className="grid grid-cols-[40px_1fr_1fr_40px] gap-2 px-4 py-1 items-center">
                         <span className="text-xs text-muted-foreground text-center font-medium">{setIdx + 1}</span>
@@ -174,7 +178,6 @@ const WorkoutTracker = () => {
                       </div>
                     ))}
 
-                    {/* Add set */}
                     <div className="px-4 py-2">
                       <button
                         onClick={() => addSet(exIdx)}
