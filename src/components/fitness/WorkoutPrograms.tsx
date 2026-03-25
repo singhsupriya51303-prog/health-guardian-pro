@@ -1,6 +1,40 @@
 import { motion } from "framer-motion";
 import { Calendar, Clock, Zap, Target, Trophy, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+
+const programExercises: Record<number, { name: string; sets: string }[]> = {
+  1: [
+    { name: "Barbell Bench Press", sets: "4×8" },
+    { name: "Overhead Press", sets: "3×10" },
+    { name: "Incline Dumbbell Press", sets: "3×12" },
+    { name: "Lateral Raises", sets: "3×15" },
+    { name: "Tricep Dips", sets: "3×12" },
+  ],
+  2: [
+    { name: "Barbell Squat", sets: "5×5" },
+    { name: "Barbell Bench Press", sets: "5×5" },
+    { name: "Barbell Row", sets: "5×5" },
+    { name: "Overhead Press", sets: "5×5" },
+    { name: "Deadlift", sets: "1×5" },
+  ],
+  3: [
+    { name: "Barbell Bench Press", sets: "4×8" },
+    { name: "Barbell Row", sets: "4×10" },
+    { name: "Overhead Press", sets: "3×10" },
+    { name: "Barbell Curl", sets: "3×12" },
+    { name: "Barbell Squat", sets: "4×8" },
+    { name: "Romanian Deadlift", sets: "3×10" },
+    { name: "Leg Press", sets: "3×12" },
+  ],
+  4: [
+    { name: "HIIT Sprints", sets: "8×30s" },
+    { name: "Jump Rope", sets: "5×2min" },
+    { name: "Barbell Squat", sets: "4×10" },
+    { name: "Barbell Bench Press", sets: "4×10" },
+    { name: "Pull-ups", sets: "3×10" },
+  ],
+};
 
 const programs = [
   {
@@ -37,7 +71,11 @@ const levelColor: Record<string, string> = {
   Advanced: "bg-destructive/20 text-destructive border-destructive/30",
 };
 
-const WorkoutPrograms = () => (
+interface Props {
+  onStartProgram?: (programName: string, exercises: { name: string; sets: string }[]) => void;
+}
+
+const WorkoutPrograms = ({ onStartProgram }: Props) => (
   <div className="space-y-4">
     {programs.map((prog, i) => (
       <motion.div
@@ -67,7 +105,6 @@ const WorkoutPrograms = () => (
           <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{prog.days}</span>
         </div>
 
-        {/* Weekly schedule preview */}
         <div className="grid grid-cols-7 gap-1">
           {prog.schedule.map((s, idx) => (
             <div key={idx} className="text-center">
@@ -81,7 +118,14 @@ const WorkoutPrograms = () => (
           ))}
         </div>
 
-        <button className="w-full py-2 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors">
+        <button
+          onClick={() => {
+            const exercises = programExercises[prog.id] || [];
+            onStartProgram?.(prog.name, exercises);
+            toast.success(`Started "${prog.name}" program`, { description: `${exercises.length} exercises loaded into your workout` });
+          }}
+          className="w-full py-2 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+        >
           Start Program
         </button>
       </motion.div>
