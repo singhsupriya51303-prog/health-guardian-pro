@@ -138,42 +138,78 @@ const Emergency = () => {
     setChatInput("");
     setChatLoading(true);
 
+    let assistantContent = "";
+
     try {
-      const res = await supabase.functions.invoke("emergency-assistant", {
-        body: { messages: updated.map(m => ({ role: m.role, content: m.content })) },
-      });
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/emergency-assistant`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ messages: updated.map(m => ({ role: m.role, content: m.content })) }),
+        }
+      );
 
-      if (res.error) throw res.error;
+      if (!resp.ok || !resp.body) {
+        if (resp.status === 429) {
+          toast.error("Rate limited. Please try again in a moment.");
+          setChatMessages(prev => [...prev, { role: "assistant", content: "Too many requests. Please wait a moment." }]);
+          setChatLoading(false);
+          return;
+        }
+        if (resp.status === 402) {
+          toast.error("AI credits exhausted.");
+          setChatMessages(prev => [...prev, { role: "assistant", content: "AI credits exhausted. Please add funds." }]);
+          setChatLoading(false);
+          return;
+        }
+        throw new Error("Stream failed");
+      }
 
-      const reader = (res.data as ReadableStream).getReader();
+      const reader = resp.body.getReader();
       const decoder = new TextDecoder();
-      let assistantContent = "";
-      setChatMessages(prev => [...prev, { role: "assistant", content: "" }]);
+      let textBuffer = "";
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const chunk = decoder.decode(value);
-        const lines = chunk.split("\n").filter(l => l.startsWith("data: "));
-        for (const line of lines) {
-          const data = line.slice(6);
-          if (data === "[DONE]") break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
           try {
-            const parsed = JSON.parse(data);
-            const delta = parsed.choices?.[0]?.delta?.content;
-            if (delta) {
-              assistantContent += delta;
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              assistantContent += content;
               setChatMessages(prev => {
-                const copy = [...prev];
-                copy[copy.length - 1] = { role: "assistant", content: assistantContent };
-                return copy;
+                const last = prev[prev.length - 1];
+                if (last?.role === "assistant" && prev.length > updated.length) {
+                  return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: assistantContent } : m);
+                }
+                return [...prev, { role: "assistant", content: assistantContent }];
               });
             }
-          } catch {}
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
         }
       }
     } catch (e: any) {
-      setChatMessages(prev => [...prev, { role: "assistant", content: "Sorry, I couldn't connect. Please try again." }]);
+      console.error(e);
+      if (!assistantContent) {
+        setChatMessages(prev => [...prev, { role: "assistant", content: "Sorry, I couldn't connect. Please try again." }]);
+      }
     } finally {
       setChatLoading(false);
     }
